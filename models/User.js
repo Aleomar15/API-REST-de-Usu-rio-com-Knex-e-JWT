@@ -28,6 +28,22 @@ class User{
         }
     }
 
+    async findByEmail(email){
+        try{
+            var result = await knex.select(["id","email","role","name"]).where({email:email}).table("users");
+            
+            if(result.length > 0){
+                return result[0];
+            }else{
+                return undefined;
+            }
+
+        }catch(err){
+            console.log(err);
+            return undefined;
+        }
+    }
+
     async new(email,password,name){
         try {
             var hash = await bcrypt.hash(password,10);
@@ -82,6 +98,21 @@ class User{
             
         }else{
             return{status: false,err: "O usuario não existe!"}
+        }
+    }
+
+    async delete(id){
+        var user =  await this.findById(id);
+        if(user != undefined){
+            try {
+                await knex.delete().where({id: id}).table("users"); 
+                return {status: true}
+            } catch (err) {
+                return {status: false, err: err}
+            }
+           
+        }else{
+            return {status: false, err: "O usuario não existe, portanto não pode ser excluido."}
         }
     }
 }

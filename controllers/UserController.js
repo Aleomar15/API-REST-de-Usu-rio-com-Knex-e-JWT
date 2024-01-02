@@ -1,4 +1,5 @@
 var User = require("../models/User");
+var PasswordToken = require("../models/PassowordToken");
 class UserController{
     async index(req,res){
         var users = await User.findAll();
@@ -63,6 +64,31 @@ class UserController{
         
     }
 
+     async remove( req, res){
+        var id = req.params.id;
+
+        var result = await User.delete(id);
+
+        if(result.status){
+            res.status(200);
+            res.send("Tudo OK!");
+        }else{
+            res.status(406);
+            res.send(result.err);
+        }
+     }
+
+     async recoverPassword(req, res){
+        var email = req.body.email;
+        var result = await PasswordToken.create(email);
+        if(result.status){
+            res.status(200);
+            res.send("" + result.token);
+        }else{
+            res.status(406);
+            res.send(result.err);
+        }
+     }
 }
 
 module.exports = new UserController();
