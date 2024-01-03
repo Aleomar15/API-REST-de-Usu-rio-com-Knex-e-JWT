@@ -11,5 +11,7 @@ router.get("/user/:id",UserController.findUser);// buscar pelo id
 router.put("/user",UserController.edit);// rota de edição
 router.delete("/user/:id", UserController.remove);// Rota de deletar usuario
 router.post("/recoverpassword", UserController.recoverPassword);// token recuperar senha
+router.post("/changepassword",UserController.changePassword);//rota para trocar a senha
+router.post("/login",UserController.login);
 
 module.exports = router;

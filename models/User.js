@@ -1,5 +1,6 @@
 var knex = require("../database/connection");
 var bcrypt = require("bcrypt");
+const PassowordToken = require("./PassowordToken");
 class User{
 
     async findAll(){
@@ -30,7 +31,7 @@ class User{
 
     async findByEmail(email){
         try{
-            var result = await knex.select(["id","email","role","name"]).where({email:email}).table("users");
+            var result = await knex.select(["id","email","password","role","name"]).where({email:email}).table("users");
             
             if(result.length > 0){
                 return result[0];
@@ -114,6 +115,12 @@ class User{
         }else{
             return {status: false, err: "O usuario não existe, portanto não pode ser excluido."}
         }
+    }
+
+    async changePassword(newPassword,id,token){
+        var hash = await bcrypt.hash(newPassword,10);
+        await knex.update({password: hash}).where({id: id}).table("users");
+        await PassowordToken.setUsed(token);
     }
 }
 
