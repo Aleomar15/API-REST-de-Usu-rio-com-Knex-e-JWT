@@ -125,8 +125,6 @@ class UserController{
                 res.status(406);
                 res.send("Senha incorreta");
             }
-               
-            res.json({status: result});
         }else{
             res.json({status: false});
         }
